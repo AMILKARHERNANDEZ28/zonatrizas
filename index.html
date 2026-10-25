@@ -1625,7 +1625,7 @@
           </div>
 
           <!-- Libros publicados en WordPress (los carga wp-feed) -->
-          <div id="wp-libros" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-8"></div>
+          <div id="wp-libros" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-8 sm:gap-x-6 mb-8"></div>
           <button id="wp-libros-mas" type="button" class="hidden w-full mb-8 py-3 border border-white/40 font-mono text-[11px] uppercase tracking-widest text-zinc-300 hover:bg-white hover:text-black transition">Ver más libros ↓</button>
 
           <a href="#contacto" class="action-bar text-xs sm:text-sm">
@@ -2284,7 +2284,8 @@ let lenis;
           const vence = f.tipo_licencia === 'temporal' ? String(f.licencia_vence || '') : '';
           const pdf = safeUrl(f.enlace_pdf);
           if (!pdf || (vence && vence < hoy)) return;
-          const a = el('a', 'block group');
+          const a = el('a', 'block group min-w-0');
+          a.title = text(b.title.rendered);
           a.href = pdf; a.target = '_blank'; a.rel = 'noopener noreferrer';
           const frame = el('div', 'border-2 border-white p-1 bg-black mb-2 aspect-[3/4] overflow-hidden');
           const img = cover(b);
@@ -2292,13 +2293,13 @@ let lenis;
           else {
             // Sin portada: tapa tipográfica para no dejar el marco vacío
             const tapa = el('div', 'w-full h-full flex flex-col justify-between p-3 bg-white text-black group-hover:bg-zinc-200 transition');
-            tapa.append(el('span', 'font-mono text-[9px] uppercase', 'Zona T(r)izas'), el('span', 'font-syne font-black uppercase text-sm sm:text-base leading-tight break-words', text(b.title.rendered)), el('span', 'font-mono text-[9px] uppercase', f.autor || ''));
+            tapa.append(el('span', 'font-mono text-[9px] uppercase', 'Zona T(r)izas'), el('span', 'font-grotesk font-bold tracking-wide sm:tracking-normal sm:font-syne sm:font-black uppercase text-sm sm:text-base leading-tight break-words hyphens-auto line-clamp-5', text(b.title.rendered)), el('span', 'font-mono text-[9px] uppercase truncate', f.autor || ''));
             frame.append(tapa);
           }
           a.append(
             frame,
-            el('h4', 'font-syne font-black uppercase text-white text-xs sm:text-sm leading-tight', text(b.title.rendered)),
-            el('p', 'font-sans text-[11px] text-zinc-400', f.autor || ''),
+            el('h4', 'font-grotesk font-bold tracking-wide sm:tracking-normal sm:font-syne sm:font-black uppercase text-white text-xs sm:text-sm leading-tight break-words hyphens-auto line-clamp-3', text(b.title.rendered)),
+            el('p', 'font-sans text-[11px] text-zinc-400 truncate mt-1', f.autor || ''),
             el('p', 'font-mono text-[10px] text-zinc-500 uppercase mt-1', vence ? 'Disponible hasta ' + ddmmyyyy(vence) : 'Leer →')
           );
           box.append(a);
