@@ -2267,6 +2267,12 @@ let lenis;
           const frame = el('div', 'border-2 border-white p-1 bg-black mb-2 aspect-[3/4] overflow-hidden');
           const img = cover(b);
           if (img) { const i = el('img', 'w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500'); i.src = img; i.alt = 'Portada de ' + text(b.title.rendered); i.loading = 'lazy'; frame.append(i); }
+          else {
+            // Sin portada: tapa tipográfica para no dejar el marco vacío
+            const tapa = el('div', 'w-full h-full flex flex-col justify-between p-3 bg-white text-black group-hover:bg-zinc-200 transition');
+            tapa.append(el('span', 'font-mono text-[9px] uppercase', 'Zona T(r)izas'), el('span', 'font-syne font-black uppercase text-sm sm:text-base leading-tight break-words', text(b.title.rendered)), el('span', 'font-mono text-[9px] uppercase', f.autor || ''));
+            frame.append(tapa);
+          }
           a.append(
             frame,
             el('h4', 'font-syne font-black uppercase text-white text-xs sm:text-sm leading-tight', text(b.title.rendered)),
