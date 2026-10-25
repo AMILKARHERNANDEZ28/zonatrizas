@@ -978,6 +978,11 @@
     }
   
 
+    @media (max-width: 420px) {
+      .spine-tag { display: none; }
+      .spine-title { font-size: 11.5px; letter-spacing: 0.06em; }
+    }
+
     /* ================= ESTILOS SECCIONES INFERIORES ================= */
     html, body {
       overflow-x: hidden;
@@ -1720,7 +1725,7 @@
   <section id="contacto" data-section="05_CONTACTO" class="max-w-7xl mx-auto p-6 sm:p-12 lg:p-16">
     <div class="max-w-4xl mx-auto">
       <div class="font-mono text-[10px] sm:text-xs uppercase text-zinc-500 mb-4">[ CONTACTO ]</div>
-      <h2 class="font-syne text-2xl sm:text-5xl md:text-6xl font-black uppercase text-white mb-6 leading-none break-words">
+      <h2 class="font-syne text-[clamp(1rem,5.8vw,1.5rem)] sm:text-5xl md:text-6xl font-black uppercase text-white mb-6 leading-none">
         Conversemos.
       </h2>
       <p class="font-sans text-xs sm:text-base text-zinc-400 mb-8 sm:mb-10 max-w-xl font-light">
@@ -1762,11 +1767,11 @@
 
 <!-- ==================== BARRA FLOTANTE MÓVIL (MOBILE BOTTOM BAR) ==================== -->
   <div class="fixed bottom-0 inset-x-0 z-50 bg-black border-t-2 border-white px-3 py-2 sm:hidden flex items-center justify-between font-mono text-[10px] uppercase text-zinc-400">
-    <a href="#manifiesto" class="px-2 py-1 text-white hover:bg-zinc-900">[Qué es]</a>
-    <a href="#laboratorios" class="px-2 py-1 text-white hover:bg-zinc-900">[Club]</a>
-    <a href="#quienes" class="px-2 py-1 text-white hover:bg-zinc-900">[Quiénes]</a>
-    <a href="https://wa.me/593998836237?text=Hola%20Erika,%20quisiera%20informaci%C3%B3n%20sobre%20Zona%20T%28r%29izas" target="_blank" rel="noopener noreferrer" class="px-3 py-1 bg-white text-black font-bold">
-      WhatsApp ↗
+    <a href="#manifiesto" class="px-1.5 py-1 text-white whitespace-nowrap hover:bg-zinc-900">[Qué es]</a>
+    <a href="#laboratorios" class="px-1.5 py-1 text-white whitespace-nowrap hover:bg-zinc-900">[Club]</a>
+    <a href="#quienes" class="px-1.5 py-1 text-white whitespace-nowrap hover:bg-zinc-900">[Quiénes]</a>
+    <a href="https://wa.me/593998836237?text=Hola%20Erika,%20quisiera%20informaci%C3%B3n%20sobre%20Zona%20T%28r%29izas" target="_blank" rel="noopener noreferrer" class="px-2 py-1 bg-white text-black font-bold whitespace-nowrap">
+      WhatsApp
     </a>
   </div>
 
