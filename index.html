@@ -1,0 +1,2209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zona T(r)izas</title>
+  <meta name="description" content="Zona T(r)izas es un espacio de investigación, reflexión y difusión de las artes escénicas, impulsado por Erika Chanatasig y Samantha Arriola.">
+  <link rel="icon" href="assets/logo_zona_trizas_tight.svg" type="image/svg+xml">
+  
+  <!-- Tipografías Editoriales Curadas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  
+  <!-- Librerías de soporte para secciones inferiores (Brutalismo Vanguardista) -->
+  
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  
+
+  <style>
+
+    /* ==========================================================================
+       VARIABLES Y RESET RIGUROSO (MINIMALISMO MONOCROMÁTICO DE ALTO CONTRASTE)
+       ========================================================================== */
+    :root {
+      --bg-stage: #060608;
+      --bg-shelf-card: #121215;
+      --bg-spine-base: #17171a;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-highlight: rgba(255, 255, 255, 0.22);
+      
+      --text-primary: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+
+      --font-serif: 'Cinzel', serif, Georgia;
+      --font-italic: 'Playfair Display', serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --font-brutalist: 'Syne', sans-serif;
+
+      --cover-width: 320px;
+      --gap-desktop: 12px;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --speed-main: 0.52s;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-stage);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Fondo escénico teatral sutil: luz cenital suave sin contaminación visual */
+    .stage-backdrop {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(ellipse at 50% -5%, rgba(255, 255, 255, 0.07) 0%, transparent 65%);
+    }
+
+    /* ==========================================================================
+       1. BARRA SUPERIOR ESCÉNICA (Fiel a estilko web-01.jpg)
+       ========================================================================== */
+    .scenic-topbar {
+      position: relative;
+      z-index: 30;
+      width: 100%;
+      max-width: 1380px;
+      padding: 24px 32px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Botón Hamburguesa Limpio (3 líneas blancas gruesas sin recuadro) */
+    .btn-clean-hamburger {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      outline: none;
+      transition: transform 0.2s ease;
+    }
+
+    .btn-clean-hamburger:hover {
+      transform: scale(1.06);
+    }
+
+    .hamburger-bar {
+      display: block;
+      height: 3px;
+      background-color: #ffffff;
+      border-radius: 2px;
+      transition: all 0.28s ease;
+    }
+
+    .hamburger-bar:nth-child(1) { width: 32px; }
+    .hamburger-bar:nth-child(2) { width: 32px; }
+    .hamburger-bar:nth-child(3) { width: 32px; }
+
+    .btn-clean-hamburger.is-active .hamburger-bar:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+    }
+    .btn-clean-hamburger.is-active .hamburger-bar:nth-child(2) {
+      opacity: 0;
+    }
+    .btn-clean-hamburger.is-active .hamburger-bar:nth-child(3) {
+      transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* Iconos Lineales en Extremo Derecho (Instagram & WhatsApp limpios) */
+    .nav-social-wrap {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .social-link {
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      opacity: 0.95;
+    }
+
+    .social-link:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .social-svg {
+      width: 26px;
+      height: 26px;
+      fill: currentColor;
+    }
+
+    /* ==========================================================================
+       2. CABECERA Y FIRMA DE MARCA OFICIAL
+       ========================================================================== */
+    .stage-branding {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1100px;
+      padding: 10px 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+    }
+
+    /* Logotipo Principal ZONA TRIZAS en perspectiva (Gran tamaño imponente) */
+    .logo-main-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-main-wrap:hover {
+      transform: scale(1.02);
+    }
+
+    .logo-trizas-svg {
+      height: clamp(84px, 11vw, 126px);
+      width: auto;
+      object-fit: contain;
+      filter: brightness(1) drop-shadow(0 4px 18px rgba(255, 255, 255, 0.2));
+    }
+
+    /* Submarcas Oficiales SVG (MERA Kii & miniTeatruras) */
+    .brand-submarcas-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 36px;
+      margin-top: 2px;
+    }
+
+    .submarca-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .submarca-link:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .logo-merakii-svg {
+      height: clamp(24px, 3.2vw, 32px);
+      width: auto;
+      object-fit: contain;
+    }
+
+    .logo-miniteatruras-svg {
+      height: clamp(22px, 3vw, 28px);
+      width: auto;
+      object-fit: contain;
+    }
+
+    /* Bajada Institucional en Dos Líneas (Exacta a estilko web-01.jpg) */
+    .brand-tagline {
+      font-family: var(--font-sans);
+      font-size: clamp(13px, 1.6vw, 15px);
+      font-weight: 300;
+      color: #e4e4e7;
+      letter-spacing: 0.02em;
+      line-height: 1.55;
+      margin-top: 2px;
+      max-width: 680px;
+    }
+
+    /* ==========================================================================
+       3. EL LIBRERO 3D REAL (ALTURAS IRREGULARES, SIN LÍNEAS QUE CORTEN)
+       ========================================================================== */
+    .stage-shelf-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1380px;
+      padding: 10px 20px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow: visible;
+    }
+
+    .stage-shelf-wrapper.is-dragging {
+      cursor: grabbing;
+    }
+
+    /* Contenedor Repisa: align-items flex-end apoya todos los libros sobre el piso */
+    .shelf-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: var(--gap-desktop);
+      min-height: 440px;
+      padding: 0 40px;
+      perspective: 1400px;
+      perspective-origin: center 70%;
+      transform-style: preserve-3d;
+      will-change: transform;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.9));
+    }
+
+    /* Tomo Escénico Individual */
+    .shelf-book {
+      position: relative;
+      height: var(--book-h, 400px);
+      width: var(--spine-w, 48px);
+      cursor: pointer;
+      outline: none;
+      display: flex;
+      transform-style: preserve-3d;
+      transform-origin: bottom center;
+      background: var(--bg-shelf-card);
+      border-radius: 2px;
+      box-shadow: 
+        -4px 8px 22px rgba(0, 0, 0, 0.65),
+        0 1px 2px rgba(255, 255, 255, 0.05) inset;
+      
+      --tilt-z: 0deg;
+      --tilt-y: 0deg;
+      --tilt-y-trans: 0px;
+      --tilt-z-trans: 0px;
+
+      transform: 
+        translateY(var(--tilt-y-trans)) 
+        translateZ(var(--tilt-z-trans)) 
+        rotateZ(var(--tilt-z)) 
+        rotateY(var(--tilt-y));
+
+      transition: 
+        width var(--speed-main) var(--ease-spring),
+        transform var(--speed-main) var(--ease-spring),
+        box-shadow var(--speed-main) var(--ease-spring);
+      z-index: 1;
+    }
+
+    /* Dimensiones de formato real por género editorial */
+    .shelf-book[data-index="0"] { --book-h: 410px; --spine-w: 48px; } /* Manifiesto: Folio */
+    .shelf-book[data-index="1"] { --book-h: 410px; --spine-w: 48px; } /* Colectivo: Activo en JPG */
+    .shelf-book[data-index="2"] { --book-h: 380px; --spine-w: 56px; } /* Club lectura: Tomo ancho */
+    .shelf-book[data-index="3"] { --book-h: 420px; --spine-w: 46px; } /* Biblioteca: Alto estilizado */
+    .shelf-book[data-index="4"] { --book-h: 395px; --spine-w: 44px; } /* Crítica: Ensayo */
+    .shelf-book[data-index="5"] { --book-h: 370px; --spine-w: 48px; } /* Contactos: Compacto */
+
+    .shelf-book:not(.is-active):hover {
+      transform: 
+        translateY(calc(var(--tilt-y-trans) - 8px)) 
+        translateZ(calc(var(--tilt-z-trans) + 12px)) 
+        rotateZ(var(--tilt-z)) 
+        rotateY(var(--tilt-y));
+      box-shadow: 
+        -8px 18px 30px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(255, 255, 255, 0.08);
+      z-index: 10;
+    }
+
+    .shelf-book.is-active {
+      width: calc(var(--spine-w, 48px) + var(--cover-width));
+      box-shadow: 
+        -14px 28px 45px rgba(0, 0, 0, 0.9),
+        0 0 25px rgba(255, 255, 255, 0.07);
+      z-index: 20;
+    }
+
+    /* Lomo del Tomo */
+    .book-spine {
+      position: relative;
+      width: var(--spine-w, 48px);
+      height: var(--book-h, 400px);
+      background-color: var(--bg-spine-base);
+      border-right: 1px solid var(--border-subtle);
+      border-radius: 2px 0 0 2px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      flex-shrink: 0;
+      overflow: hidden;
+      transition: background-color 0.25s ease;
+    }
+
+    /* Línea de color acento confinada estrictamente al lomo (sin desbordes) */
+    .book-spine::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3.5px;
+      height: 100%;
+      background-color: var(--accent-color, #e11d48);
+      box-shadow: 0 0 10px var(--accent-color, #e11d48);
+    }
+
+    .shelf-book.is-active .book-spine {
+      background-color: #1e1e22;
+    }
+
+    .spine-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .spine-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-color, #fb7185);
+      letter-spacing: 0.1em;
+    }
+
+    .spine-tag {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--text-dim);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+    }
+
+    .spine-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      white-space: nowrap;
+      letter-spacing: 0.14em;
+    }
+
+    .spine-bottom {
+      font-size: 9px;
+      color: var(--accent-color, #fb7185);
+      opacity: 0.85;
+    }
+
+    /* Tipografías editoriales curadas por tomo */
+    .font-grotesk { font-family: var(--font-sans); font-weight: 800; letter-spacing: 0.18em; }
+    .font-serif { font-family: var(--font-serif); font-weight: 700; letter-spacing: 0.2em; }
+    .font-brutalist { font-family: var(--font-brutalist); font-weight: 900; letter-spacing: 0.12em; }
+    .font-mono { font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.14em; }
+    .font-italic { font-family: var(--font-italic); font-style: italic; font-weight: 600; letter-spacing: 0.12em; }
+    .font-minimal { font-family: var(--font-sans); font-weight: 600; letter-spacing: 0.28em; }
+
+    /* Portada Desplegable */
+    .book-cover {
+      position: relative;
+      width: 0;
+      height: var(--book-h, 400px);
+      background-color: var(--bg-shelf-card);
+      border: 1px solid var(--border-subtle);
+      border-left: none;
+      border-radius: 0 2px 2px 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transform-origin: left center;
+      transform: rotateY(-25deg);
+      transition: 
+        width var(--speed-main) var(--ease-spring),
+        opacity 0.32s ease,
+        transform var(--speed-main) var(--ease-spring);
+    }
+
+    .shelf-book.is-active .book-cover {
+      width: var(--cover-width);
+      opacity: 1;
+      pointer-events: auto;
+      border-color: var(--border-highlight);
+      transform: rotateY(0deg);
+    }
+
+    .cover-media {
+      position: relative;
+      width: 100%;
+      height: calc(var(--book-h, 400px) * 0.47);
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    .cover-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+      filter: contrast(1.15) brightness(0.92);
+      transition: transform 0.8s ease;
+    }
+
+    .shelf-book.is-active .cover-media img {
+      transform: scale(1.05);
+    }
+
+    .cover-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(18, 18, 21, 0) 30%, rgba(18, 18, 21, 0.98) 100%);
+    }
+
+    .cover-body {
+      padding: 16px 20px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: calc(var(--book-h, 400px) * 0.53);
+      background-color: var(--bg-shelf-card);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .category-tag {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--accent-color, #fb7185);
+      text-transform: uppercase;
+    }
+
+    /* Base física del librero (Repisa escénica con luz de apoyo) */
+    .shelf-board {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      max-width: 1240px;
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.12) 12%,
+        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0.12) 88%,
+        transparent 100%
+      );
+      border-radius: 2px;
+      box-shadow: 
+        0 1px 8px rgba(255, 255, 255, 0.25),
+        0 8px 24px rgba(0, 0, 0, 0.95);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .shelf-board::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 10%;
+      width: 80%;
+      height: 14px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 75%);
+      pointer-events: none;
+    }
+
+    .book-headline {
+      font-family: var(--font-serif);
+      font-size: 14.5px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #ffffff;
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .book-desc {
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Botón de acción editorial en píldora limpia (estilko web-01.jpg) */
+    .cover-action {
+      margin-top: 8px;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-highlight);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.22s ease;
+      width: 100%;
+    }
+
+    .btn-action:hover {
+      background-color: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+    }
+
+    .btn-action.btn-whatsapp {
+      background-color: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #34d399;
+    }
+
+    .btn-action.btn-whatsapp:hover {
+      background-color: #10b981;
+      color: #000000;
+      border-color: #10b981;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+    }
+
+    /* ==========================================================================
+       4. DRAWER LATERAL (ÍNDICE ACCESIBLE SIN FUGAS DE FOCO)
+       ========================================================================== */
+    .scenic-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .scenic-drawer-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .scenic-drawer-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      max-width: 380px;
+      height: 100vh;
+      background: rgba(12, 12, 15, 0.98);
+      border-right: 1px solid var(--border-subtle);
+      box-shadow: 12px 0 40px rgba(0, 0, 0, 0.85);
+      z-index: 9001;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px 24px;
+      transform: translateX(-100%);
+      transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+
+    .scenic-drawer-overlay.is-open .scenic-drawer-panel {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 16px;
+    }
+
+    .drawer-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .drawer-title {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .drawer-subtitle {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .btn-drawer-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+
+    .btn-drawer-close:hover {
+      color: #ffffff;
+    }
+
+    .drawer-menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 22px 0;
+    }
+
+    .drawer-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 9999px;
+      color: #f4f4f5;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .drawer-menu-item:hover,
+    .drawer-menu-item.is-selected {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateX(3px);
+    }
+
+    .drawer-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .drawer-item-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-color, #fb7185);
+    }
+
+    .drawer-item-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .drawer-item-arrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .drawer-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .drawer-ecosystem-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       5. PUNTERO MAGNÉTICO CON INDICADOR DINÁMICO
+       ========================================================================== */
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 70px;
+      height: 70px;
+      margin-top: -35px;
+      margin-left: -35px;
+      border-radius: 50%;
+      background: rgba(14, 14, 18, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: 
+        opacity 0.25s ease, 
+        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+        background-color 0.25s ease,
+        border-color 0.25s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      will-change: transform;
+    }
+
+    .custom-cursor.is-visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .custom-cursor.state-drag {
+      background: rgba(225, 29, 72, 0.35);
+      border-color: #fb7185;
+      transform: scale(0.92);
+    }
+
+    .custom-cursor.state-read {
+      background: rgba(99, 102, 241, 0.3);
+      border-color: #818cf8;
+      transform: scale(1.05);
+    }
+
+    .custom-cursor.state-cta {
+      background: rgba(16, 185, 129, 0.35);
+      border-color: #34d399;
+      transform: scale(1.08);
+    }
+
+    .cursor-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-align: center;
+      user-select: none;
+      line-height: 1.2;
+    }
+
+    /* Pie discreto */
+    .stage-footer {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1380px;
+      padding: 6px 32px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .footer-meta {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+
+    /* ==========================================================================
+       6. MUTACIÓN RESPONSIVE MÓVIL (≤ 768px: ACORDEÓN VERTICAL)
+       ========================================================================== */
+    @media (max-width: 768px) {
+      .shelf-board {
+        display: none !important;
+      }
+
+      .custom-cursor {
+        display: none !important;
+      }
+
+      body {
+        justify-content: flex-start;
+        overflow-y: auto;
+      }
+
+      .scenic-topbar {
+        padding: 16px 20px;
+      }
+
+      .logo-trizas-svg {
+        height: 60px;
+      }
+
+      .logo-merakii-svg {
+        height: 20px;
+      }
+
+      .logo-miniteatruras-svg {
+        height: 18px;
+      }
+
+      .brand-submarcas-row {
+        gap: 20px;
+      }
+
+      .brand-tagline {
+        font-size: 12px;
+        padding: 0 12px;
+      }
+
+      .stage-shelf-wrapper {
+        padding: 10px 14px 30px;
+        cursor: default;
+      }
+
+      .shelf-container {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 8px;
+        min-height: auto;
+        padding: 0;
+        width: 100% !important;
+        transform: none !important;
+      }
+
+      .shelf-book {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 54px;
+        flex-direction: column;
+        transform: none !important;
+        --tilt-z: 0deg !important;
+        --tilt-y: 0deg !important;
+        --tilt-y-trans: 0px !important;
+        --tilt-z-trans: 0px !important;
+      }
+
+      .book-spine {
+        width: 100% !important;
+        height: 54px !important;
+        flex-direction: row;
+        padding: 12px 18px;
+        border-right: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .book-spine::before {
+        width: 4px;
+        height: 100%;
+      }
+
+      .spine-top {
+        flex-direction: row;
+        gap: 12px;
+      }
+
+      .spine-tag, .spine-title {
+        writing-mode: horizontal-tb;
+        transform: none;
+      }
+
+      .spine-title {
+        font-size: 12.5px;
+      }
+
+      .book-cover {
+        width: 100% !important;
+        height: 0;
+        opacity: 0;
+        transform: none !important;
+        transition: height var(--speed-main) var(--ease-spring), opacity 0.3s ease;
+      }
+
+      .shelf-book.is-active .book-cover {
+        height: 380px !important;
+        opacity: 1;
+      }
+
+      .cover-media {
+        height: 180px !important;
+      }
+
+      .cover-body {
+        height: 200px !important;
+      }
+
+      .stage-footer {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+        padding-bottom: 24px;
+      }
+    }
+  
+
+    /* ================= ESTILOS SECCIONES INFERIORES ================= */
+    html, body {
+      overflow-x: hidden;
+      max-width: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html.lenis, html.lenis body {
+      height: auto;
+    }
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      min-height: 48px; /* Accessible touch target */
+      background: #000000;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (hover: hover) {
+      .action-bar:hover {
+        background: #ffffff;
+        color: #000000;
+        transform: translate(-3px, -3px);
+        box-shadow: 5px 5px 0px 0px rgba(255, 255, 255, 0.4);
+      }
+    }
+
+    .parallax-text-strip {
+      will-change: transform;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .pin-step.active {
+      border-color: #ffffff;
+      color: #ffffff;
+      background: #141416;
+    }
+    .pin-step.active .step-num {
+      background: #ffffff;
+      color: #000000;
+    }
+    /* Leer más nativo (details/summary) */
+    .leer-mas summary {
+      list-style: none;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+      border-bottom: 1px solid #fff;
+    }
+    .leer-mas summary::-webkit-details-marker { display: none; }
+    .leer-mas summary::after { content: ' +'; }
+    .leer-mas[open] summary { display: none; }
+  </style>
+  <link rel="stylesheet" href="assets/tw.css">
+</head>
+<body id="top">
+
+  <!-- Fondo Escénico Sutil -->
+  <div class="stage-backdrop" aria-hidden="true"></div>
+
+  <!-- Puntero Magnético Contextual Dinámico -->
+  <div class="custom-cursor" id="customCursor" aria-hidden="true">
+    <span class="cursor-label" id="cursorLabel">EXPLORAR</span>
+  </div>
+
+  <!-- Drawer / Índice Lateral Desplegable (Accesible con inert) -->
+  <div class="scenic-drawer-overlay" id="scenicDrawer" aria-hidden="true" inert>
+    <aside class="scenic-drawer-panel" role="dialog" aria-label="Índice general de cartelera">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <span class="drawer-title">ÍNDICE ESCÉNICO</span>
+          <span class="drawer-subtitle">ZONA T(R)IZAS // 6 TOMOS</span>
+        </div>
+        <button id="btnDrawerClose" class="btn-drawer-close" type="button" aria-label="Cerrar índice">✕</button>
+      </div>
+
+      <ul class="drawer-menu-list">
+        <li class="drawer-menu-item" data-target-index="0" style="--accent-color: #e11d48;" tabindex="0" role="button">
+          <div class="drawer-item-left">
+            <span class="drawer-item-num">01</span>
+            <span class="drawer-item-title">¿QUÉ ES ZONA T(R)IZAS?</span>
+          </div>
+          <span class="drawer-item-arrow">→</span>
+        </li>
+        <li class="drawer-menu-item is-selected" data-target-index="1" style="--accent-color: #f59e0b;" tabindex="0" role="button">
+          <div class="drawer-item-left">
+            <span class="drawer-item-num">02</span>
+            <span class="drawer-item-title">¿QUIÉNES SOMOS?</span>
+          </div>
+          <span class="drawer-item-arrow">→</span>
+        </li>
+        <li class="drawer-menu-item" data-target-index="2" style="--accent-color: #10b981;" tabindex="0" role="button">
+          <div class="drawer-item-left">
+            <span class="drawer-item-num">03</span>
+            <span class="drawer-item-title">CLUB DE LECTURA</span>
+          </div>
+          <span class="drawer-item-arrow">→</span>
+        </li>
+        <li class="drawer-menu-item" data-target-index="3" style="--accent-color: #6366f1;" tabindex="0" role="button">
+          <div class="drawer-item-left">
+            <span class="drawer-item-num">04</span>
+            <span class="drawer-item-title">BIBLIOTECA DIGITAL</span>
+          </div>
+          <span class="drawer-item-arrow">→</span>
+        </li>
+        <li class="drawer-menu-item" data-target-index="4" style="--accent-color: #f43f5e;" tabindex="0" role="button">
+          <div class="drawer-item-left">
+            <span class="drawer-item-num">05</span>
+            <span class="drawer-item-title">CRÍTICA TEATRAL</span>
+          </div>
+          <span class="drawer-item-arrow">→</span>
+        </li>
+        <li class="drawer-menu-item" data-target-index="5" style="--accent-color: #d4d4d8;" tabindex="0" role="button">
+          <div class="drawer-item-left">
+            <span class="drawer-item-num">06</span>
+            <span class="drawer-item-title">CONTACTOS</span>
+          </div>
+          <span class="drawer-item-arrow">→</span>
+        </li>
+      </ul>
+
+      <div class="drawer-footer">
+        <div class="drawer-ecosystem-strip">
+          <span>NÚCLEOS:</span>
+          <span>MERA Kii · miniTeatruras</span>
+        </div>
+        <a href="https://wa.me/593998836237?text=Hola%20Zona%20T%28r%29izas,%20quisiera%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener noreferrer" class="btn-action btn-whatsapp">
+          <span>WHATSAPP ERIKA</span> <span>→</span>
+        </a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 1. Barra Superior Minimalista (Fiel a estilko web-01.jpg) -->
+  <header class="scenic-topbar">
+    <button id="btnHamburger" class="btn-clean-hamburger" type="button" aria-label="Abrir menú de cartelera" aria-expanded="false">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
+
+    <div class="nav-social-wrap">
+      <a href="https://instagram.com/miniteatruras" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram miniTeatruras" aria-label="Instagram de miniTeatruras">
+        <svg viewBox="0 0 24 24" class="social-svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="https://wa.me/593998836237?text=Hola%20Zona%20T%28r%29izas,%20quisiera%20m%C3%A1s%20informaci%C3%B3n" target="_blank" rel="noopener noreferrer" class="social-link" title="WhatsApp Erika" aria-label="WhatsApp de Erika">
+        <svg viewBox="0 0 24 24" class="social-svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- 2. Frontispicio de Marca con Logotipos SVG Oficiales -->
+  <section class="stage-branding">
+    <a href="#top" class="logo-main-wrap" title="Zona T(r)izas">
+      <img src="assets/logo_zona_trizas_tight.svg" alt="Zona T(r)izas" class="logo-trizas-svg" />
+    </a>
+
+    <div class="brand-submarcas-row">
+      <a href="https://instagram.com/guaragua_merakii" target="_blank" rel="noopener noreferrer" class="submarca-link" title="MERA Kii">
+        <img src="assets/logo_merakii_tight.svg" alt="MERA Kii" class="logo-merakii-svg" />
+      </a>
+      <a href="https://instagram.com/miniteatruras" target="_blank" rel="noopener noreferrer" class="submarca-link" title="miniTeatruras">
+        <img src="assets/logo_miniteatruras_tight.svg" alt="miniTeatruras" class="logo-miniteatruras-svg" />
+      </a>
+    </div>
+
+    <p class="brand-tagline">
+      Zona T(r)izas es un espacio de investigación,<br>
+      reflexión y difusión de las artes escénicas
+    </p>
+  </section>
+
+  <!-- 3. Librero Escénico 3D Real (Silueta Irregular Fiel a estilko web-01.jpg) -->
+  <main class="stage-shelf-wrapper" id="shelfWrapper">
+    <nav class="shelf-container" id="theaterMenu" aria-label="Librero escénico editorial 3D">
+      
+      <!-- 01: ¿Qué es Zona T(r)izas? (Folio Manifiesto: 410px) -->
+      <article class="shelf-book" data-index="0" tabindex="0" role="button" aria-expanded="false">
+        <div class="book-spine" style="--accent-color: #e11d48;">
+          <div class="spine-top">
+            <span class="spine-num">01</span>
+            <span class="spine-tag">MANIFIESTO</span>
+          </div>
+          <span class="spine-title font-grotesk">¿QUÉ ES ZONA T(R)IZAS?</span>
+          <div class="spine-bottom">●</div>
+        </div>
+        <div class="book-cover">
+          <div class="cover-media">
+            <img src="assets/escena_teatro_erika_chanatasig_corazon.webp" alt="Manifiesto teatral" loading="lazy">
+            <div class="cover-gradient"></div>
+          </div>
+          <div class="cover-body">
+            <span class="category-tag">INVESTIGACIÓN · REFLEXIÓN · DIFUSIÓN</span>
+            <h2 class="book-headline">¿Dónde está el teatro del Ecuador?</h2>
+            <p class="book-desc">
+              Un espacio de diálogo y pensamiento crítico en torno a las prácticas escénicas contemporáneas.
+            </p>
+            <div class="cover-action">
+              <a href="#manifiesto" class="btn-action">
+                <span>LEER MÁS</span> <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 02: ¿Quiénes somos? (ACTIVO EN estilko web-01.jpg: 410px) -->
+      <article class="shelf-book is-active" data-index="1" tabindex="0" role="button" aria-expanded="true">
+        <div class="book-spine" style="--accent-color: #f59e0b;">
+          <div class="spine-top">
+            <span class="spine-num">02</span>
+            <span class="spine-tag">COLECTIVO</span>
+          </div>
+          <span class="spine-title font-serif">¿QUIÉNES SOMOS?</span>
+          <div class="spine-bottom">■</div>
+        </div>
+        <div class="book-cover">
+          <div class="cover-media">
+            <img src="assets/retrato_erika_chanatasig_samantha_arriola.webp" alt="Erika Chanatasig y Samantha Arriola" loading="lazy">
+            <div class="cover-gradient"></div>
+          </div>
+          <div class="cover-body">
+            <span class="category-tag">CREACIÓN · INVESTIGACIÓN ESCÉNICA · ARCHIVA-ACCIÓN</span>
+            <h2 class="book-headline">ERIKA CHANATASIG & SAMANTHA ARRIOLA</h2>
+            <p class="book-desc">
+              Creadoras escénicas e investigadoras que impulsan Zona T(r)izas desde Ecuador.
+            </p>
+            <div class="cover-action">
+              <a href="#quienes" class="btn-action">
+                <span>CONOCER SUS PERFILES</span> <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03: Club de lectura (Antología Gruesa: 380px alto x 56px lomo) -->
+      <article class="shelf-book" data-index="2" tabindex="0" role="button" aria-expanded="false">
+        <div class="book-spine" style="--accent-color: #10b981;">
+          <div class="spine-top">
+            <span class="spine-num">03</span>
+            <span class="spine-tag">COMUNIDAD</span>
+          </div>
+          <span class="spine-title font-brutalist">CLUB DE LECTURA</span>
+          <div class="spine-bottom">▲</div>
+        </div>
+        <div class="book-cover">
+          <div class="cover-media">
+            <img src="assets/afiche_club_lectura_teatral.webp" alt="Club de lectura dramática" loading="lazy">
+            <div class="cover-gradient"></div>
+          </div>
+          <div class="cover-body">
+            <span class="category-tag">ENCUENTROS PERIÓDICOS</span>
+            <h2 class="book-headline">Leer teatro para acercarnos a sus procesos</h2>
+            <p class="book-desc">
+              Espacios para leer, analizar y conversar en torno a obras escritas para la escena.
+            </p>
+            <div class="cover-action">
+              <a href="#dossier-1" class="btn-action">
+                <span>VER EL CLUB</span> <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 04: Biblioteca digital (Partitura / Libreto: 420px alto) -->
+      <article class="shelf-book" data-index="3" tabindex="0" role="button" aria-expanded="false">
+        <div class="book-spine" style="--accent-color: #6366f1;">
+          <div class="spine-top">
+            <span class="spine-num">04</span>
+            <span class="spine-tag">ARCHIVO</span>
+          </div>
+          <span class="spine-title font-mono">BIBLIOTECA DIGITAL</span>
+          <div class="spine-bottom">◆</div>
+        </div>
+        <div class="book-cover">
+          <div class="cover-media">
+            <img src="assets/biblioteca_estanteria_libros.webp" alt="Estantería con libros de teatro" loading="lazy">
+            <div class="cover-gradient"></div>
+          </div>
+          <div class="cover-body">
+            <span class="category-tag">ACCESO LIBRE · PRÓXIMAMENTE</span>
+            <h2 class="book-headline">Archivo de dramaturgia</h2>
+            <p class="book-desc">
+              Textos teatrales de acceso libre y gratuito para leer, estudiar y compartir.
+            </p>
+            <div class="cover-action">
+              <a href="#dossier-2" class="btn-action">
+                <span>VER BIBLIOTECA</span> <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 05: Crítica teatral (Ensayo / Crónica: 395px alto) -->
+      <article class="shelf-book" data-index="4" tabindex="0" role="button" aria-expanded="false">
+        <div class="book-spine" style="--accent-color: #f43f5e;">
+          <div class="spine-top">
+            <span class="spine-num">05</span>
+            <span class="spine-tag">COLUMNAS</span>
+          </div>
+          <span class="spine-title font-italic">CRÍTICA TEATRAL</span>
+          <div class="spine-bottom">◈</div>
+        </div>
+        <div class="book-cover">
+          <div class="cover-media">
+            <img src="assets/escena_teatro_samantha_arriola.webp" alt="Crítica escénica" loading="lazy">
+            <div class="cover-gradient"></div>
+          </div>
+          <div class="cover-body">
+            <span class="category-tag">DISCUSIÓN & ENSAYOS</span>
+            <h2 class="book-headline">Cómo la escena ecuatoriana se crea, se piensa y se comparte</h2>
+            <p class="book-desc">
+              Miradas críticas sobre las prácticas escénicas contemporáneas.
+            </p>
+            <div class="cover-action">
+              <a href="#dossier-3" class="btn-action">
+                <span>VER CRÍTICA</span> <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 06: Contactos (Guía Compacta: 370px alto) -->
+      <article class="shelf-book" data-index="5" tabindex="0" role="button" aria-expanded="false">
+        <div class="book-spine" style="--accent-color: #d4d4d8;">
+          <div class="spine-top">
+            <span class="spine-num">06</span>
+            <span class="spine-tag">ENLACE</span>
+          </div>
+          <span class="spine-title font-minimal">CONTACTOS</span>
+          <div class="spine-bottom">●</div>
+        </div>
+        <div class="book-cover">
+          <div class="cover-media">
+            <img src="assets/retrato_erika_chanatasig_samantha_arriola.webp" alt="Erika Chanatasig y Samantha Arriola" loading="lazy">
+            <div class="cover-gradient"></div>
+          </div>
+          <div class="cover-body">
+            <span class="category-tag">CONTACTO DIRECTO</span>
+            <h2 class="book-headline">Escríbenos</h2>
+            <p class="book-desc">
+              WhatsApp, correo e Instagram de Zona T(r)izas.
+            </p>
+            <div class="cover-action">
+              <a href="#contacto" class="btn-action">
+                <span>IR A CONTACTO</span> <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </nav>
+
+    <!-- Base física del librero (Repisa escénica con luz de apoyo) -->
+    <div class="shelf-board" aria-hidden="true"></div>
+  </main>
+
+  <!-- ==========================================================================
+       CUERPO DE LA PÁGINA: ESTILO B (VANGUARDIA BRUTALISTA)
+       ========================================================================== -->
+  <div class="w-full relative z-10 bg-pitch text-stark">
+<section id="manifiesto" data-section="01_HERO" class="max-w-7xl mx-auto border-b-2 border-white relative overflow-hidden">
+    
+    <!-- TEXTO GIGANTE PARALLAX DE FONDO -->
+    <div id="hero-bg-text" class="parallax-text-strip absolute -top-4 sm:-top-8 left-0 font-syne text-[18vw] sm:text-[15vw] font-black uppercase text-white/[0.03] leading-none whitespace-nowrap select-none pointer-events-none">
+      ZONA T(R)IZAS ARTES ESCÉNICAS
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-white relative z-10">
+      
+      <!-- Columna Texto Hero -->
+      <div class="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-between order-2 lg:order-1">
+        <div>
+          <div class="font-mono text-[10px] sm:text-xs uppercase text-zinc-400 mb-6 sm:mb-8 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-white"></span>
+              [ ¿QUÉ ES ZONA T(R)IZAS? ]
+            </span>
+            <span class="text-zinc-500">ECUADOR</span>
+          </div>
+
+          <h1 id="hero-title" class="font-syne text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter leading-[0.95] sm:leading-[0.9] mb-6 sm:mb-8 text-white break-words">
+            HACER<br>
+            TRIZAS LA<br>
+            <span class="text-black bg-white px-2 inline-block">ESCENA.</span>
+          </h1>
+
+          <p class="font-grotesk text-lg sm:text-2xl text-zinc-300 font-bold uppercase tracking-tight leading-snug mb-6 sm:mb-8">
+            ¿Dónde está el teatro del Ecuador?
+          </p>
+
+          <p class="text-xs sm:text-sm font-sans text-zinc-400 leading-relaxed font-normal max-w-lg mb-8 sm:mb-12">
+            Zona T(r)izas es un espacio de investigación, reflexión y difusión de las artes escénicas, impulsado por Erika Chanatasig y Samantha Arriola. Surge a partir de una pregunta movilizadora: ¿dónde está el teatro del Ecuador? Desde esta inquietud, el proyecto busca generar espacios de diálogo y pensamiento crítico en torno a las prácticas escénicas contemporáneas, promoviendo el encuentro entre artistas, estudiantes, investigadores y públicos interesados en el teatro. A través de diversas iniciativas, Zona T(r)izas explora las múltiples formas en que la escena ecuatoriana se crea, se piensa y se comparte.
+          </p>
+        </div>
+
+        <!-- Botón de Acción Brutalista: Barra Completa -->
+        <a href="#laboratorios" class="action-bar text-xs sm:text-sm md:text-base">
+          <span>Club, biblioteca y crítica</span>
+          <span class="text-base sm:text-lg">→</span>
+        </a>
+      </div>
+
+      <!-- Columna Fotográfica -->
+      <div class="hidden lg:flex lg:col-span-5 p-6 sm:p-8 lg:p-10 flex-col justify-between order-1 lg:order-2">
+        <div>
+          <div class="flex justify-between font-mono text-[9px] sm:text-[10px] text-zinc-500 uppercase pb-3 mb-3 border-b border-white/20">
+            <span>CHANATASIG + ARRIOLA</span>
+          </div>
+
+          <div class="border-2 border-white p-1.5 sm:p-2 bg-black mb-4 sm:mb-6 overflow-hidden">
+            <img 
+              id="hero-img"
+              src="assets/retrato_erika_chanatasig_samantha_arriola.webp" 
+              alt="Erika Chanatasig y Samantha Arriola" 
+              class="w-full h-auto max-h-[360px] sm:max-h-[460px] object-cover object-center grayscale contrast-125"
+            />
+          </div>
+
+          <div class="font-mono text-xs text-zinc-300 space-y-0.5">
+            <p class="text-white font-bold uppercase font-grotesk text-xs sm:text-sm">Erika Chanatasig & Samantha Arriola</p>
+            <p class="text-zinc-400 text-[10px] sm:text-[11px]">Creación / investigación escénica / Archiva-Acción</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== BANNER HORIZONTAL PARALLAX CON SCROLL ==================== -->
+  <div class="border-b-2 border-white bg-white text-black py-3 sm:py-4 overflow-hidden select-none font-syne font-black text-2xl sm:text-4xl md:text-5xl uppercase tracking-tighter">
+    <div id="scroll-banner-text" class="parallax-text-strip whitespace-nowrap flex gap-8 sm:gap-12">
+      <span>¿DÓNDE ESTÁ EL TEATRO DEL ECUADOR? /// CREACIÓN /// INVESTIGACIÓN ESCÉNICA /// ARCHIVA-ACCIÓN ///&nbsp;</span>
+      <span>¿DÓNDE ESTÁ EL TEATRO DEL ECUADOR? /// CREACIÓN /// INVESTIGACIÓN ESCÉNICA /// ARCHIVA-ACCIÓN ///&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ==================== MARCAS: ESTRUCTURA TRIPARTITA ==================== -->
+  <section id="triada" data-section="02_MARCAS" class="max-w-7xl mx-auto border-b-2 border-white">
+    <div class="p-4 sm:px-12 py-6 bg-zinc-950 border-b-2 border-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-xs">
+      <span class="font-bold uppercase text-white tracking-widest text-[11px] sm:text-xs">[ NÚCLEOS ]</span>
+      <span class="text-zinc-500 uppercase text-[10px] sm:text-xs">ZONA T(R)IZAS · MINITEATRURAS · GUARAGUA MERAKII</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-y-2 md:divide-y-0 md:divide-x-2 divide-white">
+      
+      <!-- División 1: Zona T(r)izas -->
+      <div class="p-6 sm:p-8 lg:p-10 flex flex-col justify-between hover:bg-zinc-950 transition duration-300">
+        <div>
+          <div class="p-4 sm:p-6 bg-black border-2 border-white mb-5 sm:mb-6 flex items-center justify-center">
+            <img src="assets/logo_zona_trizas_tight.svg" alt="Zona T(r)izas" class="h-10 sm:h-12 w-auto object-contain" />
+          </div>
+          <h3 class="font-syne text-xl sm:text-2xl font-black uppercase text-white mb-2 sm:mb-3">Zona T(r)izas</h3>
+          <p class="text-xs sm:text-sm font-sans text-zinc-400 leading-relaxed mb-6">
+            Espacio de investigación, reflexión y difusión de las artes escénicas: club de lectura teatral, biblioteca digital y crítica teatral.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-white/10 font-mono text-xs text-zinc-400">
+          <span>URL: zonatrizas.com</span>
+        </div>
+      </div>
+
+      <!-- División 2: miniTeatruras -->
+      <div class="p-6 sm:p-8 lg:p-10 flex flex-col justify-between hover:bg-zinc-950 transition duration-300">
+        <div>
+          <div class="p-3 sm:p-4 bg-black border-2 border-white mb-4 flex items-center justify-center">
+            <img src="assets/logo_miniteatruras_tight.svg" alt="miniTeatruras" class="h-6 sm:h-8 w-auto object-contain" />
+          </div>
+          <div class="border border-white/20 mb-4 bg-black overflow-hidden">
+            <img 
+              src="assets/teatrino_titeres_miniteatruras.webp" 
+              alt="Teatrino" 
+              class="w-full h-32 sm:h-36 object-cover object-center hover:scale-105 transition duration-300" 
+            />
+          </div>
+          <h3 class="font-syne text-xl sm:text-2xl font-black uppercase text-white mb-2">miniTeatruras</h3>
+          <p class="text-xs sm:text-sm font-sans text-zinc-400 leading-relaxed mb-6">
+            Títeres, micro-teatro de objetos, dramaturgia participativa y mediación escénica directa.
+          </p>
+          <a href="https://instagram.com/miniteatruras" target="_blank" rel="noopener noreferrer" class="block border-2 border-white p-3 mb-6 hover:bg-white hover:text-black transition">
+            <span class="block font-syne font-black uppercase text-sm leading-tight">¡Cuarta llamada! para dar la vuelta al mundo en 80 títeres</span>
+            <span class="block font-mono text-[10px] mt-2 uppercase">Leer más →</span>
+          </a>
+        </div>
+        <div class="pt-4 border-t border-white/10 font-mono text-xs text-zinc-400">
+          <a href="https://instagram.com/miniteatruras" target="_blank" rel="noopener noreferrer" class="hover:text-white">IG: @miniteatruras ↗</a>
+        </div>
+      </div>
+
+      <!-- División 3: Guaragua Merakii -->
+      <div class="p-6 sm:p-8 lg:p-10 flex flex-col justify-between hover:bg-zinc-950 transition duration-300 md:col-span-2 lg:col-span-1">
+        <div>
+          <div class="p-4 sm:p-6 bg-black border-2 border-white mb-5 sm:mb-6 flex items-center justify-center">
+            <img src="assets/logo_merakii_tight.svg" alt="MERA Kii" class="h-11 sm:h-14 w-auto object-contain" />
+          </div>
+          <h3 class="font-syne text-xl sm:text-2xl font-black uppercase text-white mb-2 sm:mb-3">Guaragua Merakii</h3>
+          <p class="text-xs sm:text-sm font-sans text-zinc-400 leading-relaxed mb-6">
+            Plataforma digital dedicada a la difusión de obras, procesos de investigación y proyectos vinculados a las artes escénicas.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-white/10 font-mono text-xs text-zinc-400">
+          <a href="https://instagram.com/guaragua_merakii" target="_blank" rel="noopener noreferrer" class="hover:text-white">IG: @guaragua_merakii ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  
+
+  <!-- ==================== CLUB · BIBLIOTECA · CRÍTICA (PANEL FIJADO) ==================== -->
+  <section id="laboratorios" data-section="04_FICHAS" class="max-w-7xl mx-auto border-b-2 border-white relative">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12">
+
+      <!-- PANEL FIJADO A LA IZQUIERDA (STICKY PIN EN DESKTOP, CABECERA EN MOBILE/TABLET) -->
+      <div class="lg:col-span-4 p-6 sm:p-10 lg:p-12 border-b-2 lg:border-b-0 lg:border-r-2 border-white bg-zinc-950">
+        <div class="lg:sticky lg:top-28 flex flex-col justify-between h-auto lg:min-h-[70vh]">
+          <div>
+            <span class="font-mono text-[9px] sm:text-[10px] text-zinc-500 uppercase tracking-widest block mb-2">[ ZONA T(R)IZAS ]</span>
+            <h2 class="font-syne text-2xl sm:text-4xl font-black text-white uppercase tracking-tight mb-4 sm:mb-6">
+              Club, biblioteca y crítica
+            </h2>
+            <p class="font-sans text-xs sm:text-sm text-zinc-400 mb-6 sm:mb-10 leading-relaxed font-light">
+              Las iniciativas con las que Zona T(r)izas explora cómo la escena ecuatoriana se crea, se piensa y se comparte.
+            </p>
+
+            <!-- Indicadores interactivos (En móvil son chips horizontales) -->
+            <div class="flex lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 font-mono text-xs">
+              <a href="#dossier-1" id="step-nav-1" class="pin-step active border border-white/20 p-2.5 sm:p-3.5 flex items-center justify-between gap-3 shrink-0 lg:shrink transition-all duration-300">
+                <span class="font-bold text-[10px] sm:text-xs">01. CLUB DE LECTURA</span>
+                <span class="step-num px-1.5 py-0.5 bg-white text-black font-mono font-bold text-[9px]">ACTIVO</span>
+              </a>
+              <a href="#dossier-2" id="step-nav-2" class="pin-step border border-white/10 p-2.5 sm:p-3.5 flex items-center justify-between gap-3 text-zinc-500 shrink-0 lg:shrink transition-all duration-300">
+                <span class="font-bold text-[10px] sm:text-xs">02. BIBLIOTECA DIGITAL</span>
+                <span class="step-num px-1.5 py-0.5 bg-zinc-800 text-zinc-400 font-mono text-[9px]">02</span>
+              </a>
+              <a href="#dossier-3" id="step-nav-3" class="pin-step border border-white/10 p-2.5 sm:p-3.5 flex items-center justify-between gap-3 text-zinc-500 shrink-0 lg:shrink transition-all duration-300">
+                <span class="font-bold text-[10px] sm:text-xs">03. CRÍTICA TEATRAL</span>
+                <span class="step-num px-1.5 py-0.5 bg-zinc-800 text-zinc-400 font-mono text-[9px]">03</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENIDO DESPLAZABLE A LA DERECHA -->
+      <div class="lg:col-span-8 divide-y-2 divide-white">
+
+        <!-- 01: CLUB DE LECTURA TEATRAL (textos Canva) -->
+        <article id="dossier-1" class="p-6 sm:p-10 lg:p-12 scroll-trigger-item">
+          <div class="flex justify-between items-center font-mono text-[10px] sm:text-xs text-zinc-400 mb-6">
+            <span>[ 01 // CLUB DE LECTURA TEATRAL ]</span>
+            <span class="px-2 py-0.5 bg-white text-black font-bold">ENCUENTROS PERIÓDICOS</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start mb-8">
+            <div class="md:col-span-5">
+              <div class="border-2 border-white p-1 bg-black max-w-[200px] sm:max-w-none">
+                <img
+                  src="assets/afiche_club_lectura_teatral.webp"
+                  alt="Afiche del Club de Lectura Teatral"
+                  class="w-full h-auto object-cover grayscale hover:grayscale-0 transition duration-500"
+                />
+              </div>
+            </div>
+            <div class="md:col-span-7">
+              <h3 class="font-syne text-xl sm:text-2xl md:text-3xl font-black uppercase text-white mb-3 sm:mb-4">
+                Club de Lectura Teatral
+              </h3>
+              <div class="font-sans text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6 font-light space-y-3">
+                <p>El Club de Lectura Teatral nace de la convicción de que leer teatro es también una forma de acercarnos a sus procesos, lenguajes, contextos y múltiples posibilidades de creación. El proyecto busca acercar la dramaturgia a nuevos lectores y fortalecer el acceso a la cultura escrita desde una práctica colectiva y abierta.</p>
+                <details class="leer-mas">
+                  <summary>Leer más</summary>
+                  <div class="space-y-3 mt-3">
+                    <p>A través de encuentros periódicos, el club propone espacios para leer, analizar y conversar en torno a obras escritas para la escena. La lectura se convierte así en un punto de encuentro para compartir perspectivas, intercambiar saberes y construir conocimiento de manera colectiva.</p>
+                <p>Uno de sus principales objetivos es también difundir la dramaturgia ecuatoriana, poniendo en circulación obras y autores que dan cuenta de la diversidad de voces, estéticas, experiencias y problemáticas que atraviesan el teatro del país.</p>
+                <p>Más que un espacio dedicado únicamente a la lectura, el club busca construir comunidad alrededor de las artes escénicas, reuniendo a estudiantes, artistas y personas interesadas en el teatro. En este intercambio, reconocemos que la creación escénica se alimenta de múltiples fuentes: dramaturgias, experiencias, investigaciones, referentes, archivos y saberes que enriquecen y transforman las prácticas artísticas.</p>
+                  </div>
+                </details>
+              </div>
+              <div class="font-mono space-y-1 text-[11px] sm:text-xs text-zinc-400 pb-2">
+                <p>• COORDINACIÓN: Erika Chanatasig & Samantha Arriola</p>
+                <p>• FRECUENCIA: Encuentros periódicos</p>
+              </div>
+            </div>
+          </div>
+
+          <a href="https://wa.me/593998836237?text=Hola%20Erika,%20quiero%20unirme%20al%20Club%20de%20Lectura%20Teatral%20de%20Zona%20T%28r%29izas" target="_blank" rel="noopener noreferrer" class="action-bar text-xs sm:text-sm">
+            <span>Quiero unirme al club (WhatsApp)</span>
+            <span>→</span>
+          </a>
+        </article>
+
+        <!-- 02: BIBLIOTECA DIGITAL -->
+        <article id="dossier-2" class="p-6 sm:p-10 lg:p-12 scroll-trigger-item">
+          <div class="flex justify-between items-center font-mono text-[10px] sm:text-xs text-zinc-400 mb-6">
+            <span>[ 02 // BIBLIOTECA DIGITAL ]</span>
+            <span class="px-2 py-0.5 bg-zinc-800 text-zinc-300">PRÓXIMAMENTE</span>
+          </div>
+
+          <div class="mb-8">
+            <div class="border-2 border-white p-1 bg-black mb-6 overflow-hidden">
+              <img src="assets/biblioteca_estanteria_libros.webp" alt="Estantería con libros de teatro" loading="lazy" class="w-full h-32 sm:h-44 object-cover grayscale hover:grayscale-0 transition duration-500" />
+            </div>
+            <h3 class="font-syne text-xl sm:text-2xl md:text-3xl font-black uppercase text-white mb-3 sm:mb-4">
+              Biblioteca Digital
+            </h3>
+            <p class="font-sans text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6 font-light">
+              Un archivo de textos teatrales de acceso libre y gratuito para estudiantes de teatro, docentes, grupos de teatro y personas interesadas en la literatura teatral.
+            </p>
+          </div>
+
+          <a href="#contacto" class="action-bar text-xs sm:text-sm">
+            <span>Proponer un texto</span>
+            <span>→</span>
+          </a>
+        </article>
+
+        <!-- 03: CRÍTICA TEATRAL -->
+        <article id="dossier-3" class="p-6 sm:p-10 lg:p-12 scroll-trigger-item">
+          <div class="flex justify-between items-center font-mono text-[10px] sm:text-xs text-zinc-400 mb-6">
+            <span>[ 03 // CRÍTICA TEATRAL ]</span>
+            <span class="px-2 py-0.5 bg-zinc-800 text-zinc-300">PRÓXIMAMENTE</span>
+          </div>
+
+          <div class="mb-8">
+            <h3 class="font-syne text-xl sm:text-2xl md:text-3xl font-black uppercase text-white mb-3 sm:mb-4">
+              Crítica Teatral
+            </h3>
+            <p class="font-sans text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6 font-light">
+              Diálogo y pensamiento crítico en torno a las prácticas escénicas contemporáneas: las múltiples formas en que la escena ecuatoriana se crea, se piensa y se comparte.
+            </p>
+          </div>
+
+          <a href="https://instagram.com/guaragua_merakii" target="_blank" rel="noopener noreferrer" class="action-bar text-xs sm:text-sm">
+            <span>Seguir en Guaragua Merakii</span>
+            <span>↗</span>
+          </a>
+        </article>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== ¿QUIÉNES SOMOS? (textos Canva) ==================== -->
+  <section id="quienes" data-section="04_QUIENES" class="max-w-7xl mx-auto border-b-2 border-white">
+    <div class="p-4 sm:px-12 py-6 bg-zinc-950 border-b-2 border-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-xs">
+      <span class="font-bold uppercase text-white tracking-widest text-[11px] sm:text-xs">[ ¿QUIÉNES SOMOS? ]</span>
+      <span class="text-zinc-500 uppercase text-[10px] sm:text-xs">CREACIÓN / INVESTIGACIÓN ESCÉNICA / ARCHIVA-ACCIÓN</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 divide-y-2 md:divide-y-0 md:divide-x-2 divide-white">
+      <div class="p-6 sm:p-10">
+        <div class="border-2 border-white p-1.5 sm:p-2 bg-black mb-4 overflow-hidden">
+          <img
+            src="assets/escena_teatro_erika_chanatasig_corazon.webp"
+            alt="Erika Chanatasig en escena"
+            class="w-full h-[280px] sm:h-[360px] md:h-[400px] object-cover object-center grayscale contrast-125"
+          />
+        </div>
+        <div class="font-mono text-[11px] sm:text-xs flex justify-between text-zinc-400 uppercase mb-4">
+          <span class="text-white font-bold">Erika Chanatasig</span>
+          <span>Latacunga, Ecuador · 1997</span>
+        </div>
+        <div class="font-sans text-xs sm:text-sm text-zinc-300 leading-relaxed font-light space-y-3">
+          <p>Artista, investigadora y creadora escénica. Es licenciada por la Universidad de las Artes de Guayaquil (Ecuador) y magíster por la Universidad Veracruzana (México). Su práctica integra danza, teatro, escritura y máscaras, explorando corporalidades andinas y danzas populares en el umbral entre lo ritual y lo escénico.</p>
+                <details class="leer-mas">
+                  <summary>Leer más</summary>
+                  <div class="space-y-3 mt-3">
+                    <p>Ha presentado obras y ponencias en eventos académicos y artísticos en México, Ecuador y Brasil, donde también dirigió un laboratorio de investigación y práctica en la Universidad Federal de Río de Janeiro (Escuela de Bellas Artes). Es actriz, escribe para la escena y codirige el Club de Lectura Teatral Zona T(r)izas, un proyecto independiente que busca democratizar el acceso al teatro. Su trabajo se caracteriza por articular las escrituras del cuerpo con contextos festivos y situados.</p>
+                  </div>
+                </details>
+              </div>
+      </div>
+
+      <div class="p-6 sm:p-10">
+        <div class="border-2 border-white p-1.5 sm:p-2 bg-black mb-4 overflow-hidden">
+          <img
+            src="assets/escena_teatro_samantha_arriola.webp"
+            alt="Samantha Arriola en escena"
+            class="w-full h-[280px] sm:h-[360px] md:h-[400px] object-cover object-center grayscale contrast-125"
+          />
+        </div>
+        <div class="font-mono text-[11px] sm:text-xs flex justify-between text-zinc-400 uppercase mb-4">
+          <span class="text-white font-bold">Samantha Arriola</span>
+          <span>Cuenca, Ecuador · 2001</span>
+        </div>
+        <div class="font-sans text-xs sm:text-sm text-zinc-300 leading-relaxed font-light space-y-3">
+          <p>Creadora escénica azuaya y estudiante de Creación Teatral en la Universidad de las Artes de Guayaquil. Realizó un intercambio académico en la Universidad Nacional de las Artes de Argentina (2026).</p>
+                <details class="leer-mas">
+                  <summary>Leer más</summary>
+                  <div class="space-y-3 mt-3">
+                    <p>Su trabajo se centra en la dramaturgia contemporánea, con especial interés en las relaciones entre memoria, tiempo e identidad. A través de estructuras temporales no lineales, sus obras exploran las huellas que dejan las experiencias de la infancia en la construcción de quienes somos, indagando en cómo ciertos patrones se transmiten, se transforman o pueden llegar a romperse.</p>
+          <p>Es creadora de Guaragua Merakii, una plataforma digital dedicada a la difusión de obras, procesos de investigación y proyectos vinculados a las artes escénicas. Desde este espacio impulsa la circulación y visibilización del trabajo de artistas, colectivos y creadorxs, fomentando el diálogo entre la creación, la reflexión y la investigación artística.</p>
+                  </div>
+                </details>
+              </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACTO ==================== -->
+  <section id="contacto" data-section="05_CONTACTO" class="max-w-7xl mx-auto p-6 sm:p-12 lg:p-16">
+    <div class="max-w-4xl mx-auto">
+      <div class="font-mono text-[10px] sm:text-xs uppercase text-zinc-500 mb-4">[ CONTACTO ]</div>
+      <h2 class="font-syne text-2xl sm:text-5xl md:text-6xl font-black uppercase text-white mb-6 leading-none break-words">
+        Conversemos.
+      </h2>
+      <p class="font-sans text-xs sm:text-base text-zinc-400 mb-8 sm:mb-10 max-w-xl font-light">
+        Escríbenos para sumarte al club de lectura, proponer textos o compartir tu trabajo escénico.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <a href="https://wa.me/593998836237?text=Hola%20Erika,%20quisiera%20informaci%C3%B3n%20sobre%20Zona%20T%28r%29izas" target="_blank" rel="noopener noreferrer" class="action-bar text-xs sm:text-sm">
+          <span>WhatsApp Erika · Ecuador</span>
+          <span>→</span>
+        </a>
+
+        <a href="https://wa.me/5491164267630?text=Hola%20Samantha,%20quisiera%20informaci%C3%B3n%20sobre%20Zona%20T%28r%29izas" target="_blank" rel="noopener noreferrer" class="action-bar text-xs sm:text-sm">
+          <span>WhatsApp Samantha · Argentina</span>
+          <span>→</span>
+        </a>
+
+        <a href="mailto:zonatrizas@gmail.com" class="action-bar text-xs sm:text-sm sm:col-span-2">
+          <span class="truncate">zonatrizas@gmail.com</span>
+          <span>↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t-2 border-white p-6 pb-28 sm:pb-6 max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between font-mono text-xs text-zinc-400 gap-4 uppercase">
+    <div class="flex items-center gap-4">
+      <img src="assets/logo_zona_trizas_tight.svg" alt="Zona T(r)izas" class="h-7 sm:h-8 w-auto object-contain" />
+      <span class="text-[10px] sm:text-xs">© 2026 ZONA T(R)IZAS // Quito, Ecuador</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <a href="https://instagram.com/miniteatruras" target="_blank" rel="noopener noreferrer" aria-label="Instagram de miniTeatruras"><img src="assets/logo_miniteatruras_tight.svg" alt="miniTeatruras" class="h-3.5 sm:h-4 w-auto object-contain opacity-75 hover:opacity-100" /></a>
+      <span class="text-zinc-700">|</span>
+      <a href="https://instagram.com/guaragua_merakii" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Guaragua Merakii"><img src="assets/logo_merakii_tight.svg" alt="Guaragua Merakii" class="h-5 w-auto object-contain opacity-75 hover:opacity-100" /></a>
+    </div>
+  </footer>
+  </div>
+
+<!-- ==================== BARRA FLOTANTE MÓVIL (MOBILE BOTTOM BAR) ==================== -->
+  <div class="fixed bottom-0 inset-x-0 z-50 bg-black border-t-2 border-white px-3 py-2 sm:hidden flex items-center justify-between font-mono text-[10px] uppercase text-zinc-400">
+    <a href="#manifiesto" class="px-2 py-1 text-white hover:bg-zinc-900">[Qué es]</a>
+    <a href="#laboratorios" class="px-2 py-1 text-white hover:bg-zinc-900">[Club]</a>
+    <a href="#quienes" class="px-2 py-1 text-white hover:bg-zinc-900">[Quiénes]</a>
+    <a href="https://wa.me/593998836237?text=Hola%20Erika,%20quisiera%20informaci%C3%B3n%20sobre%20Zona%20T%28r%29izas" target="_blank" rel="noopener noreferrer" class="px-3 py-1 bg-white text-black font-bold">
+      WhatsApp ↗
+    </a>
+  </div>
+
+
+
+  <!-- ================= JAVASCRIPT: CINEMÁTICA Y FÍSICA REACTIVA ================= -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const shelfWrapper = document.getElementById('shelfWrapper');
+      const shelfContainer = document.getElementById('theaterMenu');
+      const books = Array.from(document.querySelectorAll('.shelf-book'));
+      const cursor = document.getElementById('customCursor');
+      const cursorLabel = document.getElementById('cursorLabel');
+
+      // Drawer
+      const btnHamburger = document.getElementById('btnHamburger');
+      const drawerOverlay = document.getElementById('scenicDrawer');
+      const btnDrawerClose = document.getElementById('btnDrawerClose');
+      const drawerItems = Array.from(document.querySelectorAll('.drawer-menu-item'));
+
+      // Activo por defecto: Tomo 02 (¿Quiénes somos?), idéntico a estilko web-01.jpg
+      let activeIndex = 1;
+
+      /* 1. Física reactiva en abanico (Bookends) */
+      function updateBookTilts(targetIndex) {
+        if (window.innerWidth <= 768) {
+          books.forEach((book) => {
+            book.style.setProperty('--tilt-z', '0deg');
+            book.style.setProperty('--tilt-y', '0deg');
+            book.style.setProperty('--tilt-y-trans', '0px');
+            book.style.setProperty('--tilt-z-trans', '0px');
+          });
+          return;
+        }
+
+        books.forEach((book, i) => {
+          const diff = i - targetIndex;
+
+          if (diff === 0) {
+            book.style.setProperty('--tilt-z', '0deg');
+            book.style.setProperty('--tilt-y', '0deg');
+            book.style.setProperty('--tilt-y-trans', '0px');
+            book.style.setProperty('--tilt-z-trans', '48px');
+          } else if (diff < 0) {
+            if (diff === -1) {
+              book.style.setProperty('--tilt-z', '-8.5deg');
+              book.style.setProperty('--tilt-y', '16deg');
+              book.style.setProperty('--tilt-y-trans', '0px');
+              book.style.setProperty('--tilt-z-trans', '4px');
+            } else if (diff === -2) {
+              book.style.setProperty('--tilt-z', '-5deg');
+              book.style.setProperty('--tilt-y', '12deg');
+              book.style.setProperty('--tilt-y-trans', '0px');
+              book.style.setProperty('--tilt-z-trans', '0px');
+            } else {
+              book.style.setProperty('--tilt-z', '-2.5deg');
+              book.style.setProperty('--tilt-y', '8deg');
+              book.style.setProperty('--tilt-y-trans', '0px');
+              book.style.setProperty('--tilt-z-trans', '0px');
+            }
+          } else {
+            if (diff === 1) {
+              book.style.setProperty('--tilt-z', '7.5deg');
+              book.style.setProperty('--tilt-y', '-16deg');
+              book.style.setProperty('--tilt-y-trans', '0px');
+              book.style.setProperty('--tilt-z-trans', '4px');
+            } else if (diff === 2) {
+              book.style.setProperty('--tilt-z', '4deg');
+              book.style.setProperty('--tilt-y', '-12deg');
+              book.style.setProperty('--tilt-y-trans', '0px');
+              book.style.setProperty('--tilt-z-trans', '0px');
+            } else {
+              book.style.setProperty('--tilt-z', '2deg');
+              book.style.setProperty('--tilt-y', '-8deg');
+              book.style.setProperty('--tilt-y-trans', '0px');
+              book.style.setProperty('--tilt-z-trans', '0px');
+            }
+          }
+        });
+      }
+
+      /* 2. Selección de Tomo Activo */
+      function setActiveBook(index) {
+        if (index < 0 || index >= books.length) return;
+        activeIndex = index;
+
+        books.forEach((book, i) => {
+          const isActive = i === activeIndex;
+          book.classList.toggle('is-active', isActive);
+          book.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        });
+
+        drawerItems.forEach((item, i) => {
+          item.classList.toggle('is-selected', i === activeIndex);
+        });
+
+        updateBookTilts(activeIndex);
+        centerBook(books[activeIndex]);
+      }
+
+      /* 3. Desplazamiento y centrado fluido (Lerp 60 FPS) */
+      let isDown = false;
+      let startX = 0;
+      let downX = 0;
+      let currentTranslateX = 0;
+      let targetTranslateX = 0;
+      let isDragging = false;
+
+      function getBounds() {
+        if (!shelfWrapper || !shelfContainer) return { min: 0, max: 0 };
+        const wrapperW = shelfWrapper.clientWidth;
+        const containerW = shelfContainer.scrollWidth;
+
+        if (containerW <= wrapperW) {
+          return { min: -100, max: 100 };
+        } else {
+          const maxScroll = containerW - wrapperW + 60;
+          return { min: -maxScroll, max: 40 };
+        }
+      }
+
+      function centerBook(book) {
+        if (!book || !shelfWrapper || window.innerWidth <= 768) return;
+        const wrapperRect = shelfWrapper.getBoundingClientRect();
+        const bookRect = book.getBoundingClientRect();
+        const offset = (bookRect.left + bookRect.width / 2) - (wrapperRect.left + wrapperRect.width / 2);
+
+        targetTranslateX -= offset;
+        clampTarget();
+      }
+
+      function clampTarget() {
+        const { min, max } = getBounds();
+        targetTranslateX = Math.max(min, Math.min(max, targetTranslateX));
+      }
+
+      function renderGlide() {
+        if (window.innerWidth <= 768) {
+          if (shelfContainer) shelfContainer.style.transform = '';
+          requestAnimationFrame(renderGlide);
+          return;
+        }
+
+        if (shelfContainer) {
+          const diff = targetTranslateX - currentTranslateX;
+          if (Math.abs(diff) > 0.08) {
+            currentTranslateX += diff * 0.14;
+            shelfContainer.style.transform = `translateX(${currentTranslateX.toFixed(2)}px)`;
+          }
+        }
+        requestAnimationFrame(renderGlide);
+      }
+      requestAnimationFrame(renderGlide);
+
+      if (shelfWrapper) {
+        shelfWrapper.addEventListener('mousedown', (e) => {
+          if (window.innerWidth <= 768) return;
+          if (e.target.closest('.btn-action') || e.target.closest('a')) return;
+
+          isDown = true;
+          isDragging = false;
+          startX = e.pageX - targetTranslateX;
+          downX = e.pageX;
+          shelfWrapper.classList.add('is-dragging');
+          updateCursorState(e.target);
+        });
+
+        shelfWrapper.addEventListener('wheel', (e) => {
+          if (window.innerWidth <= 768) return;
+          const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+          targetTranslateX -= delta * 0.85;
+          clampTarget();
+        }, { passive: true });
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        if (Math.abs(e.pageX - downX) > 6) isDragging = true;
+        targetTranslateX = e.pageX - startX;
+        clampTarget();
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDown) return;
+        isDown = false;
+        if (shelfWrapper) shelfWrapper.classList.remove('is-dragging');
+
+        if (shelfWrapper && shelfContainer) {
+          if (shelfContainer.scrollWidth <= shelfWrapper.clientWidth) {
+            targetTranslateX = 0;
+          }
+        }
+      });
+
+      books.forEach((book, index) => {
+        book.addEventListener('click', (e) => {
+          if (isDragging) {
+            e.preventDefault();
+            return;
+          }
+          if (e.target.closest('.btn-action')) return;
+          setActiveBook(index);
+        });
+
+        book.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setActiveBook(index);
+          }
+        });
+      });
+
+      /* 4. Drawer Accesible */
+      function toggleDrawer(open) {
+        if (!drawerOverlay) return;
+        if (open) {
+          drawerOverlay.removeAttribute('inert');
+          drawerOverlay.setAttribute('aria-hidden', 'false');
+          drawerOverlay.classList.add('is-open');
+          if (btnHamburger) {
+            btnHamburger.classList.add('is-active');
+            btnHamburger.setAttribute('aria-expanded', 'true');
+          }
+          document.body.style.overflow = 'hidden';
+        } else {
+          drawerOverlay.setAttribute('inert', '');
+          drawerOverlay.setAttribute('aria-hidden', 'true');
+          drawerOverlay.classList.remove('is-open');
+          if (btnHamburger) {
+            btnHamburger.classList.remove('is-active');
+            btnHamburger.setAttribute('aria-expanded', 'false');
+          }
+          document.body.style.overflow = '';
+        }
+      }
+
+      if (btnHamburger) {
+        btnHamburger.addEventListener('click', () => {
+          const isOpen = drawerOverlay.classList.contains('is-open');
+          toggleDrawer(!isOpen);
+        });
+      }
+
+      if (btnDrawerClose) {
+        btnDrawerClose.addEventListener('click', () => toggleDrawer(false));
+      }
+
+      if (drawerOverlay) {
+        drawerOverlay.addEventListener('click', (e) => {
+          if (e.target === drawerOverlay) toggleDrawer(false);
+        });
+      }
+
+      drawerItems.forEach((item) => {
+        item.addEventListener('click', () => {
+          const target = parseInt(item.getAttribute('data-target-index'), 10);
+          if (!isNaN(target)) {
+            toggleDrawer(false);
+            setActiveBook(target);
+          }
+        });
+      });
+
+      /* 5. Puntero Magnético */
+      function updateCursorState(target) {
+        if (!cursor || !cursorLabel) return;
+
+        if (isDragging || (shelfWrapper && shelfWrapper.classList.contains('is-dragging'))) {
+          cursorLabel.textContent = 'DESLIZANDO';
+          cursor.className = 'custom-cursor is-visible state-drag';
+        } else if (target && (target.closest('.btn-action') || target.closest('.social-link') || target.closest('.btn-clean-hamburger'))) {
+          cursorLabel.textContent = 'ACCEDER';
+          cursor.className = 'custom-cursor is-visible state-cta';
+        } else if (target && target.closest('.shelf-book.is-active')) {
+          cursorLabel.textContent = 'LEER';
+          cursor.className = 'custom-cursor is-visible state-read';
+        } else if (target && target.closest('.shelf-book')) {
+          cursorLabel.textContent = 'EXTRAER';
+          cursor.className = 'custom-cursor is-visible';
+        } else if (target && target.closest('.stage-shelf-wrapper')) {
+          cursorLabel.textContent = 'ARRASTRAR';
+          cursor.className = 'custom-cursor is-visible';
+        } else {
+          cursorLabel.textContent = 'EXPLORAR';
+          cursor.className = 'custom-cursor is-visible';
+        }
+      }
+
+      if (cursor && cursorLabel) {
+        let mouseX = -100, mouseY = -100;
+        let cursorX = -100, cursorY = -100;
+
+        window.addEventListener('mousemove', (e) => {
+          if (window.innerWidth <= 768) return;
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+
+          if (!cursor.classList.contains('is-visible')) {
+            cursor.classList.add('is-visible');
+          }
+          updateCursorState(e.target);
+        });
+
+        document.addEventListener('mouseleave', () => {
+          cursor.classList.remove('is-visible');
+        });
+
+        function renderCursor() {
+          if (window.innerWidth > 768) {
+            cursorX += (mouseX - cursorX) * 0.22;
+            cursorY += (mouseY - cursorY) * 0.22;
+            cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+          }
+          requestAnimationFrame(renderCursor);
+        }
+        requestAnimationFrame(renderCursor);
+      }
+
+      /* 6. Atajos de Teclado */
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          toggleDrawer(false);
+          return;
+        }
+
+        // Flechas solo con el foco en el librero: fuera de él deben hacer scroll normal
+        if (!shelfContainer || !shelfContainer.contains(document.activeElement)) return;
+
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const next = (activeIndex + 1) % books.length;
+          setActiveBook(next);
+          books[next].focus();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prev = (activeIndex - 1 + books.length) % books.length;
+          setActiveBook(prev);
+          books[prev].focus();
+        }
+      });
+
+      // Inicialización con Tomo 02 activo (idéntico a estilko web-01.jpg)
+      setActiveBook(1);
+
+      window.addEventListener('resize', () => {
+        updateBookTilts(activeIndex);
+      });
+    });
+  </script>
+
+  <!-- Scripts de interactividad para secciones inferiores (Lenis, GSAP, HUD) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Lenis Smooth Scroll y GSAP ScrollTrigger para el cuerpo inferior
+let lenis;
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    // Activar Lenis solo en mousewheel de escritorio/laptop para respetar gestos táctiles nativos de iOS/Android
+    if (typeof Lenis !== 'undefined' && !isTouch) {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+      });
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+    }
+
+    // GSAP ScrollTrigger
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+
+      if (lenis) {
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      // Parallax en texto horizontal
+      gsap.to('#hero-bg-text', {
+        xPercent: -20,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#manifiesto',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.5,
+        }
+      });
+
+      gsap.to('#scroll-banner-text', {
+        xPercent: -15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#scroll-banner-text',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        }
+      });
+
+      // Sincronización de Fichas (Funciona en móvil y desktop)
+      const dossiers = [
+        { id: '#dossier-1', nav: '#step-nav-1' },
+        { id: '#dossier-2', nav: '#step-nav-2' },
+        { id: '#dossier-3', nav: '#step-nav-3' }
+      ];
+
+      dossiers.forEach((item, index) => {
+        ScrollTrigger.create({
+          trigger: item.id,
+          start: 'top 50%',
+          end: 'bottom 50%',
+          onEnter: () => activateStep(index),
+          onEnterBack: () => activateStep(index),
+        });
+      });
+
+      function activateStep(idx) {
+        dossiers.forEach((d, i) => {
+          const navEl = document.querySelector(d.nav);
+          if (navEl) {
+            if (i === idx) {
+              navEl.classList.add('active');
+              navEl.classList.remove('text-zinc-500', 'border-white/10');
+              const badge = navEl.querySelector('.step-num');
+              if (badge) {
+                badge.className = 'step-num px-1.5 py-0.5 bg-white text-black font-mono font-bold text-[9px]';
+                badge.textContent = 'ACTIVO';
+              }
+            } else {
+              navEl.classList.remove('active');
+              navEl.classList.add('text-zinc-500', 'border-white/10');
+              const badge = navEl.querySelector('.step-num');
+              if (badge) {
+                badge.className = 'step-num px-1.5 py-0.5 bg-zinc-800 text-zinc-400 font-mono text-[9px]';
+                badge.textContent = `0${i+1}`;
+              }
+            }
+          }
+        });
+      }
+    }
+    });
+  </script>
+
+</body>
+</html>
