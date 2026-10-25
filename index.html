@@ -1588,6 +1588,12 @@
             </div>
           </div>
 
+          <!-- Últimas notas del club publicadas en WordPress (categoría "club") -->
+          <div id="wp-club" class="hidden mb-8">
+            <p class="font-mono text-[10px] sm:text-xs text-zinc-500 uppercase mb-2">[ Últimas del club ]</p>
+            <div id="wp-club-list" class="divide-y-2 divide-white border-y-2 border-white"></div>
+          </div>
+
           <a href="https://wa.me/593998836237?text=Hola%20Erika,%20quiero%20unirme%20al%20Club%20de%20Lectura%20Teatral%20de%20Zona%20T%28r%29izas" target="_blank" rel="noopener noreferrer" class="action-bar text-xs sm:text-sm">
             <span>Quiero unirme al club (WhatsApp)</span>
             <span>→</span>
@@ -1615,6 +1621,7 @@
 
           <!-- Libros publicados en WordPress (los carga wp-feed) -->
           <div id="wp-libros" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-8"></div>
+          <button id="wp-libros-mas" type="button" class="hidden w-full mb-8 py-3 border border-white/40 font-mono text-[11px] uppercase tracking-widest text-zinc-300 hover:bg-white hover:text-black transition">Ver más libros ↓</button>
 
           <a href="#contacto" class="action-bar text-xs sm:text-sm">
             <span>Proponer un texto</span>
@@ -2226,37 +2233,47 @@ let lenis;
         return safeUrl((s && (s.medium_large || s.medium || {}).source_url) || m.source_url);
       };
       const ddmmyyyy = (ymd) => ymd.slice(6, 8) + '/' + ymd.slice(4, 6) + '/' + ymd.slice(0, 4);
-      const reveal = (box, badgeId) => { box.classList.remove('hidden'); document.getElementById(badgeId)?.remove(); };
 
-      // Crítica: últimas 3 entradas de la categoría "critica"
-      get('categories?slug=critica').then(async ([cat]) => {
-        const box = document.getElementById('wp-criticas');
-        if (!cat || !box) return;
-        const posts = await get(`posts?categories=${cat.id}&per_page=3&_embed`);
-        posts.forEach((p) => {
-          const link = safeUrl(p.link);
-          if (!link) return;
-          const a = el('a', 'flex gap-4 py-4 group');
-          a.href = link; a.target = '_blank'; a.rel = 'noopener noreferrer';
-          const img = cover(p);
-          if (img) { const i = el('img', 'w-24 h-24 sm:w-32 sm:h-24 object-cover grayscale group-hover:grayscale-0 border border-white/30 shrink-0'); i.src = img; i.alt = ''; i.loading = 'lazy'; a.append(i); }
-          const body = el('div', 'min-w-0');
-          body.append(
-            el('p', 'font-mono text-[10px] text-zinc-500 uppercase mb-1', new Date(p.date).toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' })),
-            el('h4', 'font-syne font-black uppercase text-white text-sm sm:text-base leading-tight mb-1 group-hover:underline', text(p.title.rendered)),
-            el('p', 'font-sans text-xs text-zinc-400 line-clamp-2', text(p.excerpt.rendered))
-          );
-          a.append(body);
-          box.append(a);
-        });
-        if (box.children.length) reveal(box, 'badge-criticas');
-      }).catch(() => {});
+      const reveal = (id) => document.getElementById(id)?.classList.remove('hidden');
+      const drop = (id) => document.getElementById(id)?.remove();
 
-      // Biblioteca: libros con licencia vigente (los vencidos se ocultan solos)
-      get('libro?per_page=12&_embed').then((libros) => {
+      // Notas (entradas de WordPress) de una categoría: Crítica y Club usan la misma tarjeta
+      const notas = (slug, listId, n, onShow) =>
+        get('categories?slug=' + slug).then(async ([cat]) => {
+          const box = document.getElementById(listId);
+          if (!cat || !box) return;
+          const posts = await get(`posts?categories=${cat.id}&per_page=${n}&_embed`);
+          posts.forEach((p) => {
+            const link = safeUrl(p.link);
+            if (!link) return;
+            const a = el('a', 'flex gap-4 py-4 group');
+            a.href = link; a.target = '_blank'; a.rel = 'noopener noreferrer';
+            const img = cover(p);
+            if (img) { const i = el('img', 'w-24 h-24 sm:w-32 sm:h-24 object-cover grayscale group-hover:grayscale-0 border border-white/30 shrink-0'); i.src = img; i.alt = ''; i.loading = 'lazy'; a.append(i); }
+            const body = el('div', 'min-w-0');
+            body.append(
+              el('p', 'font-mono text-[10px] text-zinc-500 uppercase mb-1', new Date(p.date).toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' })),
+              el('h4', 'font-syne font-black uppercase text-white text-sm sm:text-base leading-tight mb-1 group-hover:underline', text(p.title.rendered)),
+              el('p', 'font-sans text-xs text-zinc-400 line-clamp-2', text(p.excerpt.rendered))
+            );
+            a.append(body);
+            box.append(a);
+          });
+          if (box.children.length) onShow();
+        }).catch(() => {});
+
+      notas('critica', 'wp-criticas', 3, () => { reveal('wp-criticas'); drop('badge-criticas'); });
+      notas('club', 'wp-club-list', 2, () => reveal('wp-club'));
+
+      // Biblioteca: 12 libros por tanda + botón "Ver más libros"; los vencidos se ocultan solos
+      // ponytail: el filtro de vencidos es en el navegador; una tanda puede mostrar menos de 12. Filtrar en WP si la biblioteca pasa de ~300 libros.
+      const hoy = new Date().toLocaleDateString('en-CA').replace(/-/g, ''); // fecha local (Guayaquil), no UTC
+      const masBtn = document.getElementById('wp-libros-mas');
+      let pagina = 0;
+      const cargarLibros = () => fetch(`${API}libro?per_page=12&page=${++pagina}&_embed`).then(async (r) => {
         const box = document.getElementById('wp-libros');
-        if (!box) return;
-        const hoy = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        if (!r.ok || !box) return;
+        const libros = await r.json();
         libros.forEach((b) => {
           const f = b.acf || {};
           const vence = f.tipo_licencia === 'temporal' ? String(f.licencia_vence || '') : '';
@@ -2281,8 +2298,13 @@ let lenis;
           );
           box.append(a);
         });
-        if (box.children.length) reveal(box, 'badge-libros');
+        if (box.children.length) { reveal('wp-libros'); drop('badge-libros'); }
+        const quedan = pagina < Number(r.headers.get('X-WP-TotalPages') || 1);
+        masBtn?.classList.toggle('hidden', !quedan);
+        if (quedan && !box.children.length) cargarLibros(); // tanda entera vencida: pedir la siguiente
       }).catch(() => {});
+      masBtn?.addEventListener('click', cargarLibros);
+      cargarLibros();
     })();
   </script>
 
