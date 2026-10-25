@@ -1598,7 +1598,7 @@
         <article id="dossier-2" class="p-6 sm:p-10 lg:p-12 scroll-trigger-item">
           <div class="flex justify-between items-center font-mono text-[10px] sm:text-xs text-zinc-400 mb-6">
             <span>[ 02 // BIBLIOTECA DIGITAL ]</span>
-            <span class="px-2 py-0.5 bg-zinc-800 text-zinc-300">PRÓXIMAMENTE</span>
+            <span id="badge-libros" class="px-2 py-0.5 bg-zinc-800 text-zinc-300">PRÓXIMAMENTE</span>
           </div>
 
           <div class="mb-8">
@@ -1613,6 +1613,9 @@
             </p>
           </div>
 
+          <!-- Libros publicados en WordPress (los carga wp-feed) -->
+          <div id="wp-libros" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-8"></div>
+
           <a href="#contacto" class="action-bar text-xs sm:text-sm">
             <span>Proponer un texto</span>
             <span>→</span>
@@ -1623,7 +1626,7 @@
         <article id="dossier-3" class="p-6 sm:p-10 lg:p-12 scroll-trigger-item">
           <div class="flex justify-between items-center font-mono text-[10px] sm:text-xs text-zinc-400 mb-6">
             <span>[ 03 // CRÍTICA TEATRAL ]</span>
-            <span class="px-2 py-0.5 bg-zinc-800 text-zinc-300">PRÓXIMAMENTE</span>
+            <span id="badge-criticas" class="px-2 py-0.5 bg-zinc-800 text-zinc-300">PRÓXIMAMENTE</span>
           </div>
 
           <div class="mb-8">
@@ -1634,6 +1637,9 @@
               Diálogo y pensamiento crítico en torno a las prácticas escénicas contemporáneas: las múltiples formas en que la escena ecuatoriana se crea, se piensa y se comparte.
             </p>
           </div>
+
+          <!-- Últimas críticas publicadas en WordPress (las carga wp-feed) -->
+          <div id="wp-criticas" class="hidden divide-y-2 divide-white border-y-2 border-white mb-8"></div>
 
           <a href="https://instagram.com/guaragua_merakii" target="_blank" rel="noopener noreferrer" class="action-bar text-xs sm:text-sm">
             <span>Seguir en Guaragua Merakii</span>
@@ -2203,6 +2209,75 @@ let lenis;
       }
     }
     });
+  </script>
+
+  <!-- ================= WP-FEED: notas y libros publicados en WordPress ================= -->
+  <script>
+    (() => {
+      const API = 'https://performarelcuerpofestivo.com/zonatrizas/wp-json/wp/v2/';
+      const get = (path) => fetch(API + path).then((r) => (r.ok ? r.json() : []));
+      const text = (html) => new DOMParser().parseFromString(html || '', 'text/html').body.textContent.trim();
+      const safeUrl = (u) => (/^https:\/\//.test(u || '') ? u : null);
+      const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt) e.textContent = txt; return e; };
+      const cover = (item) => {
+        const m = item._embedded && item._embedded['wp:featuredmedia'] && item._embedded['wp:featuredmedia'][0];
+        if (!m || !m.source_url) return null;
+        const s = m.media_details && m.media_details.sizes;
+        return safeUrl((s && (s.medium_large || s.medium || {}).source_url) || m.source_url);
+      };
+      const ddmmyyyy = (ymd) => ymd.slice(6, 8) + '/' + ymd.slice(4, 6) + '/' + ymd.slice(0, 4);
+      const reveal = (box, badgeId) => { box.classList.remove('hidden'); document.getElementById(badgeId)?.remove(); };
+
+      // Crítica: últimas 3 entradas de la categoría "critica"
+      get('categories?slug=critica').then(async ([cat]) => {
+        const box = document.getElementById('wp-criticas');
+        if (!cat || !box) return;
+        const posts = await get(`posts?categories=${cat.id}&per_page=3&_embed`);
+        posts.forEach((p) => {
+          const link = safeUrl(p.link);
+          if (!link) return;
+          const a = el('a', 'flex gap-4 py-4 group');
+          a.href = link; a.target = '_blank'; a.rel = 'noopener noreferrer';
+          const img = cover(p);
+          if (img) { const i = el('img', 'w-24 h-24 sm:w-32 sm:h-24 object-cover grayscale group-hover:grayscale-0 border border-white/30 shrink-0'); i.src = img; i.alt = ''; i.loading = 'lazy'; a.append(i); }
+          const body = el('div', 'min-w-0');
+          body.append(
+            el('p', 'font-mono text-[10px] text-zinc-500 uppercase mb-1', new Date(p.date).toLocaleDateString('es-EC', { day: '2-digit', month: 'short', year: 'numeric' })),
+            el('h4', 'font-syne font-black uppercase text-white text-sm sm:text-base leading-tight mb-1 group-hover:underline', text(p.title.rendered)),
+            el('p', 'font-sans text-xs text-zinc-400 line-clamp-2', text(p.excerpt.rendered))
+          );
+          a.append(body);
+          box.append(a);
+        });
+        if (box.children.length) reveal(box, 'badge-criticas');
+      }).catch(() => {});
+
+      // Biblioteca: libros con licencia vigente (los vencidos se ocultan solos)
+      get('libro?per_page=12&_embed').then((libros) => {
+        const box = document.getElementById('wp-libros');
+        if (!box) return;
+        const hoy = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        libros.forEach((b) => {
+          const f = b.acf || {};
+          const vence = f.tipo_licencia === 'temporal' ? String(f.licencia_vence || '') : '';
+          const pdf = safeUrl(f.enlace_pdf);
+          if (!pdf || (vence && vence < hoy)) return;
+          const a = el('a', 'block group');
+          a.href = pdf; a.target = '_blank'; a.rel = 'noopener noreferrer';
+          const frame = el('div', 'border-2 border-white p-1 bg-black mb-2 aspect-[3/4] overflow-hidden');
+          const img = cover(b);
+          if (img) { const i = el('img', 'w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500'); i.src = img; i.alt = 'Portada de ' + text(b.title.rendered); i.loading = 'lazy'; frame.append(i); }
+          a.append(
+            frame,
+            el('h4', 'font-syne font-black uppercase text-white text-xs sm:text-sm leading-tight', text(b.title.rendered)),
+            el('p', 'font-sans text-[11px] text-zinc-400', f.autor || ''),
+            el('p', 'font-mono text-[10px] text-zinc-500 uppercase mt-1', vence ? 'Disponible hasta ' + ddmmyyyy(vence) : 'Leer →')
+          );
+          box.append(a);
+        });
+        if (box.children.length) reveal(box, 'badge-libros');
+      }).catch(() => {});
+    })();
   </script>
 
 </body>
